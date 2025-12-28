@@ -170,8 +170,8 @@ const Contacts = () => {
         </select>
       </div>
 
-      {/* TABLE */}
-      <div className="bg-white border rounded-lg overflow-hidden">
+      {/* desktop table */}
+      <div className="hidden md:block bg-white border rounded-lg overflow-hidden">
         {loading ? (
           <div className="p-6 text-center">
             <SmallLoader />
@@ -233,6 +233,66 @@ const Contacts = () => {
               ))}
             </tbody>
           </table>
+        )}
+      </div>
+      {/* MOBILE CARDS */}
+      <div className="md:hidden space-y-4">
+        {loading ? (
+          <div className="p-6 text-center">
+            <SmallLoader />
+          </div>
+        ) : contacts.length === 0 ? (
+          <p className="text-center text-gray-500">
+            No messages found
+          </p>
+        ) : (
+          contacts.map((c) => (
+            <div
+              key={c._id}
+              className="bg-white border rounded-lg p-4 space-y-3"
+            >
+              {/* HEADER */}
+              <div className="flex justify-between items-start">
+                <div>
+                  <p className="font-semibold">{c.name}</p>
+                  <p className="text-xs text-gray-500">{c.email}</p>
+                </div>
+                <StatusBadge status={c.status} />
+              </div>
+
+              {/* SUBJECT */}
+              <p className="text-sm font-medium text-gray-800">
+                {c.subject}
+              </p>
+
+              {/* DATE */}
+              <p className="text-xs text-gray-500">
+                {new Date(c.createdAt).toLocaleString()}
+              </p>
+
+              {/* ACTIONS */}
+              <div className="flex gap-3 pt-2">
+                <button
+                  onClick={() => {
+                    setViewContact(c);
+                    if (c.status === "unread") {
+                      updateStatus(c._id, "read");
+                    }
+                  }}
+                  className="flex-1 flex items-center justify-center gap-2 bg-blue-50 text-blue-600 py-2 rounded-lg"
+                >
+                  <FaEye /> View
+                </button>
+
+                <button
+                  onClick={() => deleteContact(c._id)}
+                  className="flex-1 flex items-center justify-center gap-2 bg-red-50 text-red-600 py-2 rounded-lg"
+                >
+                  <FaTrash /> Delete
+                </button>
+              </div>
+            </div>
+          ))
         )}
       </div>
 
